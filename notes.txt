@@ -1,0 +1,8 @@
+ key sk-ea5aa2d72db54be4ba7c1658cdabbbb2
+
+ 
+  git config --global user.email "jakub.mitura14@gmail.com"
+  git config --global user.name "Jakub Mitura"
+
+
+  python3 -m streamlit run /workspaces/practical_radio_ai/psma_GUI_model/structured_report_streamlit.py

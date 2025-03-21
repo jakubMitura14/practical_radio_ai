@@ -1,0 +1,153 @@
+Here is the analysis of the attached image, detailing the structure, headers, questions, and types of answers:
+
+### Interpretation & Reporting Considerations (Continued)
+#### Clinical History & Procedure
+1. **Indication for the scan**
+   - Primary staging (Checkbox)
+   - CRPC/Recurrent restaging (Checkbox)
+   - PSMA expression assessment for PSMA targeted therapy (Checkbox)
+
+2. **Relevant History**
+   - **Date of initiation of last/recurrent therapy (dd/mm/yyyy)?** (Open type)
+   - **Radical prostatectomy?** (Yes/No)
+   - **External beam radiation to prostate?** (Yes/No)
+   - **Post-prostatectomy external beam radiation?** (Yes/No)
+   - **Brachytherapy to prostate?** (Yes/No)
+   - **Androgen deprivation therapy?** (Yes/No)
+   - **ARPI (i.e., abiraterone)?** (Yes/No)
+   - **Chemotherapy?** (Yes/No)
+   - **Other (therapies, etc.)** (Open type)
+   - **Most recent PSA levels (ng/mL):** (Open type)
+   - **Date of measurement (dd/mm/yyyy):** (Open type)
+
+3. **Comparison or Prior Imaging**
+   - **Radiopharmaceutical used:** (Open type)
+   - **Dosage and Injection Time:** (Open type)
+
+4. **Accompanying CT**
+   - **Attenuation Correction Only** (Checkbox)
+   - **Diagnostic with contrast** (Checkbox)
+   - **Diagnostic without contrast** (Checkbox)
+
+5. **Background Reference Uptake**
+   - **Liver**
+     - **SUV mean:** (Number)
+     - **Lesion present?** (Yes/No)
+   - **Blood pool**
+     - **SUV mean:** (Number)
+     - **Lesion present?** (Yes/No)
+   - **Other:**
+     - **SUV mean:** (Number)
+     - **Lesion present?** (Yes/No)
+
+6. **Prostate Gland**
+   - **Lesion(s) present?** (Yes/No)
+   - **Number of lesions:** (Open type)
+   - **SUVmax:** (Open type)
+   - **Localization:**
+     - **Left/Right** (Checkbox)
+     - **Base/Mid/Apical** (Checkbox)
+     - **Anterior/Posterior** (Checkbox)
+
+7. **Prostate Bed (Post-Prostatectomy)**
+   - **Lesion(s) present?** (Yes/No)
+   - **Number of lesions:** (Open type)
+   - **SUVmax:** (Open type)
+   - **Localization:**
+     - **Left/Right** (Checkbox)
+     - **Base/Mid/Apical** (Checkbox)
+     - **Anterior/Posterior** (Checkbox)
+
+8. **Seminal Vesicles**
+   - **Lesion(s) present?** (Yes/No)
+   - **Number of lesions:** (Open type)
+   - **SUVmax:** (Open type)
+   - **Localization:** (Checkboxes for Left/Right)
+
+9. **Pelvic LN(s)**
+   - **Lesion(s) present?** (Yes/No)
+   - **External Iliac**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Internal Iliac**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Obturator**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Common iliac**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Perirectal**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Presacral**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Other**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+
+10. **Extra-pelvic LN(s)**
+   - **Lesion(s) present?** (Yes/No)
+   - **Abdominal**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Thoracic**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Supraclavicular**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+   - **Other**
+     - **Lesion present?** (Yes/No)
+     - **Size & SUVmax:** (Open type)
+     - **Notes:** (Open type)
+
+11. **Skeletal/Bone Metastases**
+    - **Lesion(s) present?** (Yes/No)
+    - **Number of lesions:** (Checkboxes for 0, 1, 2-4, 5+)
+    - **Bone marrow involvement:** (Yes/No)
+    - **Localization Notes:** (Open type)
+
+12. **Visceral Metastases**
+    - **Lesion(s) present?** (Yes/No)
+    - **Localization:** (Checkboxes for Lung/Liver/Brain/Other)
+    - **Size & SUVmax:** (Open type)
+    - **Notes:** (Open type)
+
+13. **Presence of PSMA-negative lesions noted on CT**
+    - **Lesion(s) present?** (Yes/No)
+    - **Number of lesions:** (Open type)
+    - **Localization Notes:** (Open type)
+
+14. **Indeterminate findings/ additional notes**
+    - **Notes:** (Open type)
+
+### Impression
+- **miTNM** (Open type)
+- **PROMISE** (Open type)
+- **PRIMARY** (Open type)
+- **RECIP** (Open type)
+
+### Other scoring systems
+- **Notes:** (Open type)
+
+### Notes
+* SUVmax = maximum standardized uptake value, useful for calculation of biological uptake.
+* miTNM = molecular imaging TNM, a method for the classification of the primary tumor and metastases, useful in lesions <2 cm to accurately stage the disease.
+* PROMISE = Prostate Cancer Molecular Imaging Standardized Evaluation, a method for the classification of the primary tumor and metastases, useful in lesions <2 cm to accurately stage the disease.
+* PRIMARY = Prostate Imaging Reporting and Data System, a method for the classification of the primary tumor and metastases, useful in lesions <2 cm to accurately stage the disease.
+* RECIP = Response Evaluation Criteria in PSMA Imaging, a method for the classification of the primary tumor and metastases, useful in lesions <2 cm to accurately stage the disease.
+
+This structure includes headers, questions, and the type of answers (open type, closed, or checkbox) for each section.
