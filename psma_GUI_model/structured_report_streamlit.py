@@ -7,6 +7,7 @@ import traceback
 import os
 from typing import Dict, Any, List
 import logging
+from create_summary import generate_summary
 # Import from local modules
 from prompts import build_prompts
 from main_text_input_process import process_text_input
@@ -22,6 +23,36 @@ if 'form_state' not in st.session_state:
 def update_field_value(field_key: str, value: Any):
     """Update a field value in the form state"""
     st.session_state.form_state[field_key] = value
+    # Update summary whenever a field changes
+    st.session_state.form_state["summary"] = generate_summary(st.session_state.form_state)
+
+def update_summary():
+    """Update the summary based on current form state"""
+    summary_lines = []
+    form_fields = initialize_form_fields()
+    
+    # Process each section in order
+    sections = sorted(set(field["section"] for field in form_fields.values()))
+    
+    for section in sections:
+        section_fields = {k: v for k, v in form_fields.items() if v["section"] == section}
+        
+        for field_key, field_info in section_fields.items():
+            value = get_field_value(field_key)
+            if value:
+                if isinstance(value, list):
+                    value_str = ", ".join(map(str, value))
+                elif isinstance(value, datetime.date):
+                    value_str = value.strftime("%Y-%m-%d")
+                else:
+                    value_str = str(value)
+                    
+                if value_str.strip() and value_str.lower() not in ["no", "unknown", "0"]:
+                    summary_lines.append(f"{field_info['label']}: {value_str}")
+    
+    # Update summary field
+    summary = "\n".join(summary_lines)
+    st.session_state.form_state["summary"] = summary
 
 def get_field_value(field_key: str, default: Any = None) -> Any:
     """Get a field value from the form state"""
@@ -973,11 +1004,18 @@ def main():
     st.set_page_config(page_title="PSMA PET/CT Report", layout="wide")
     st.title("PSMA PET/CT Structured Report Generator")
     
-    # Initialize state
+    # Initialize state and summary
     if 'raw_text' not in st.session_state:
         st.session_state.raw_text = ""
     if 'processing_complete' not in st.session_state:
         st.session_state.processing_complete = False
+    if 'form_state' not in st.session_state:
+        st.session_state.form_state = {}
+        st.session_state.form_state["summary"] = ""
+    
+    # Add this before display_form to ensure summary is initialized
+    if "summary" not in st.session_state.form_state:
+        st.session_state.form_state["summary"] = ""
     
     # Sidebar
     st.sidebar.title("Input Options")
