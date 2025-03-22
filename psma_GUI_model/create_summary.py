@@ -143,18 +143,18 @@ def generate_summary(form_state: Dict[str, Any]) -> str:
         if form_state.get("skeletal_localization_notes"):
             details.append(form_state["skeletal_localization_notes"])
         if details:
-            add_field("Skeletal/Bone Metastases", "; ".join(details))
+            add_field("Skeletal/Bone Metastases", "; ".join(map(str, details)))
 
     if form_state.get("visceral_lesions") == "Yes":
         details = []
         if form_state.get("visceral_localization"):
-            details.append(f"Sites: {', '.join(form_state['visceral_localization'])}")
+            details.append(f"Sites: {', '.join(map(str, form_state['visceral_localization']))}")
         if form_state.get("visceral_size_suv"):
-            details.append(form_state["visceral_size_suv"])
+            details.append(str(form_state["visceral_size_suv"]))
         if form_state.get("visceral_notes"):
-            details.append(form_state["visceral_notes"])
+            details.append(str(form_state["visceral_notes"]))
         if details:
-            add_field("Visceral Metastases", "; ".join(details))
+            add_field("Visceral Metastases", "; ".join(map(str, details)))
 
     # PSMA-negative lesions
     if form_state.get("psma_negative_lesions") == "Yes":
@@ -162,9 +162,9 @@ def generate_summary(form_state: Dict[str, Any]) -> str:
         if form_state.get("psma_negative_lesion_count"):
             details.append(f"Number of lesions: {form_state['psma_negative_lesion_count']}")
         if form_state.get("psma_negative_localization_notes"):
-            details.append(form_state["psma_negative_localization_notes"])
+            details.append(str(form_state["psma_negative_localization_notes"]))
         if details:
-            add_field("PSMA-negative lesions", "; ".join(details))
+            add_field("PSMA-negative lesions", "; ".join(map(str, details)))
 
     # Impression
     impression_fields = [

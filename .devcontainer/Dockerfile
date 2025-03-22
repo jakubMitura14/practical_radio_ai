@@ -112,25 +112,26 @@ RUN python3 -m  pip install \
     daft \ 
     sweetviz \
     requests \
-aiohttp \
-streamlit \
-nest_asyncio \
-langchain \
-ollama \
-chromadb \
-langchain_community \
-pydantic \
-transformers \
-kg-gen \
-streamlit-lottie \
-vtk \
-ipywidgets \
+    aiohttp \
+    streamlit \
+    nest_asyncio \
+    langchain \
+    ollama \
+    chromadb \
+    langchain_community \
+    pydantic \
+    transformers \
+    kg-gen \
+    streamlit-lottie \
+    vtk \
+    ipywidgets \
     requests \
     glob2 \
     pytest-shutil \
     pydicom \
     torch torchvision torchaudio \
-    accelerate
+    accelerate \
+    gdown
     
 RUN python3 -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 RUN python3 -m pip install faiss-gpu-cu11 bitsandbytes
@@ -167,4 +168,13 @@ RUN \
     # Smoke test
     sqlite3 --version
 
+RUN apt-get update && \
+    apt-get install -y unzip && \
+    rm -rf /var/lib/apt/lists/*
 
+RUN git clone https://github.com/bowang-lab/MedSAM /workspaces/MedSAM && \
+    cd /workspaces/MedSAM && \
+    pip install -e .
+
+# The model download is now handled by postCreateCommand in devcontainer.json
+# instead of during image build

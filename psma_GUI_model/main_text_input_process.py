@@ -5,43 +5,77 @@ import traceback
 from typing import List, Dict, Any, Optional, Tuple
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from huggingface_hub import login
+import json
+from datetime import datetime
 from prompts import build_prompts
-
+import time
+    
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+# Global variables for model and tokenizer
+global_model = None
+global_tokenizer = None
+
+
+token_path = "/workspaces/practical_radio_ai/psma_GUI_model/hugging_face_key.txt"
+with open(token_path, "r") as file:
+    token = file.read().strip()
+    login(token=token)
+    logger.info("Successfully logged in with HuggingFace token")
+
+
+def initialize_model(model_name: str, device: str = "cuda" if torch.cuda.is_available() else "cpu") -> None:
+    """Initialize model and tokenizer at program start"""
+    global global_model, global_tokenizer
+    
+    logger.info(f"Initializing model {model_name} on {device}")
+    model, tokenizer = load_huggingface_model(model_name, device)
+    global_model = model
+    global_tokenizer = tokenizer
+    logger.info(f"Model {model_name} initialized successfully")
 
 def load_huggingface_model(model_name: str, device: str = "cuda" if torch.cuda.is_available() else "cpu") -> Tuple[Any, Any]:
     """Load model and tokenizer without event loop dependencies"""
     logger.info(f"Loading model {model_name} on {device}")
     
-    try:
+    # try:
         # Load HuggingFace token for gated models
-        token_path = "/workspaces/practical_radio_ai/hugging_face_key.txt"
-        if os.path.exists(token_path):
-            with open(token_path, "r") as file:
-                token = file.read().strip()
-                login(token=token)
-                logger.info("Successfully logged in with HuggingFace token")
+
+    
+    # Load tokenizer with padding on left side
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    
+    # Load model with appropriate configuration
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name, 
+        device_map=device,
+        torch_dtype=torch.float16
+    )
+    
+    return model, tokenizer
         
-        # Load tokenizer with padding on left side
-        tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
-        if tokenizer.pad_token is None:
-            tokenizer.pad_token = tokenizer.eos_token
-        
-        # Load model with appropriate configuration
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name, 
-            device_map=device,
-            torch_dtype=torch.float16
-        )
-        
-        return model, tokenizer
-        
-    except Exception as e:
-        error_message = f"Error loading model {model_name}: {str(e)}\n{traceback.format_exc()}"
-        logger.error(error_message)
-        raise RuntimeError(error_message)
+    # except Exception as e:
+    #     error_message = f"Error loading model {model_name}: {str(e)}\n{traceback.format_exc()}"
+    #     logger.error(error_message)
+    #     raise RuntimeError(error_message)
+
+
+
+# Load config
+config = {"model_name": "ibm-granite/granite-3.2-8b-instruct-preview", "batch_size": 1}
+with open("/workspaces/practical_radio_ai/psma_GUI_model/config.json", "r") as f:
+    config.update(json.load(f))
+# except Exception as e:
+#     logger.warning(f"Using default config: {str(e)}")
+
+model, tokenizer=load_huggingface_model(config["model_name"], "cuda")
+model_name = config["model_name"]
+batch_size = config["batch_size"]
+language = config.get("language", "en")  # Default to English if not specified
 
 def process_prompts_in_batches(
     user_input: str,
@@ -59,11 +93,20 @@ def process_prompts_in_batches(
         logger.error(f"No valid prompts found in keys: {prompt_keys}")
         return {}
     
-    try:
-        model, tokenizer = load_huggingface_model(model_name)
-    except Exception as e:
-        logger.error(f"Failed to load model: {str(e)}")
-        return {key: f"ERROR: Model loading failed: {str(e)}" for key in valid_prompt_keys}
+    # Use global model and tokenizer if initialized, otherwise load them
+    # global global_model, global_tokenizer
+    
+    # if global_model is None or global_tokenizer is None:
+    #     logger.warning(f"Model not initialized. Loading model {model_name} now.")
+    #     try:
+    #         model, tokenizer = load_huggingface_model(model_name)
+    #         # Don't set global variables here to avoid side effects
+    #     except Exception as e:
+    #         logger.error(f"Failed to load model: {str(e)}")
+    #         return {key: f"ERROR: Model loading failed: {str(e)}" for key in valid_prompt_keys}
+    # else:
+    #     model = global_model
+    #     tokenizer = global_tokenizer
     
     results = {}
     max_input_length = 1024  # Reduce input length to avoid token overflow
@@ -106,6 +149,11 @@ def process_prompts_in_batches(
                 response = batch_responses[j]
                 if truncated_input in response:
                     response = response.split(truncated_input)[-1].strip()
+                
+                # Remove any prompt tags that might be in the response
+                import re
+                response = re.sub(r'<prompt>.*?</prompt>', '', response).strip()
+                
                 results[key] = response
                 logger.info(f"Processed {key}: Response length {len(response)}  response {response}")
                 
@@ -158,13 +206,13 @@ def apply_field_dependencies(form_values: Dict[str, Any], form_fields: Dict[str,
 def process_text_input(
     user_input: str,
     field_info_dict: Dict[str, Dict[str, Any]],
-    model_name: str,
-    batch_size: int = 4
 ) -> Dict[str, Dict[str, Any]]:
     """Main function to process text input and update observables"""
-    from prompts import build_prompts
-    
+
     logger.info(f"Processing text input with model {model_name}, batch size {batch_size}")
+    
+    # Start timing execution
+    start_time = time.time()
     
     # Group fields by prompt_key
     prompt_groups = {}
@@ -177,11 +225,11 @@ def process_text_input(
     
     unique_prompt_keys = list(prompt_groups.keys())
     
-    # Process prompts
+    # Process prompts using the global language setting
     prompt_responses = process_prompts_in_batches(
         user_input,
         unique_prompt_keys,
-        build_prompts(),
+        build_prompts(language),  # Pass the language parameter
         model_name,
         batch_size
     )
@@ -201,7 +249,11 @@ def process_text_input(
                 'value': postprocess_response(response, field_info)
             }
     
-    return field_results
+    # Log execution time
+    execution_time = time.time() - start_time
+    logger.info(f"process_text_input execution completed in {execution_time:.2f} seconds")
+    print(f"process_text_input execution completed in {execution_time:.2f} seconds")
+    return field_results,execution_time
 
 def postprocess_response(response: str, field_info: Dict[str, Any]) -> Any:
     """Process response based on field type"""

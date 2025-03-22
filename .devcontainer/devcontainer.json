@@ -54,13 +54,13 @@
 		"github.copilot-labs",
 		"ms-toolsai.datawrangler"
 	],
-	// "mounts": [
-	// 	"source=/media/jm/hddData/datasets/Task09_Spleen,target=/home/data,type=bind,consistency=cached"
-	//   ],
+	"mounts": [
+		"source=/DATA,target=/home/data,type=bind,consistency=cached"
+	  ],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+	// "postCreateCommand": "mkdir -p /home/data/MedSAM/medsam_vit_b && cd /home/data/MedSAM/medsam_vit_b && (wget --no-check-certificate -O model_checkpoint.zip \"https://drive.google.com/uc?export=download&id=1ETWmi4AiniJeWOt6HAsYgTjYv_fkgzoN\" || gdown --fuzzy \"https://drive.google.com/file/d/1ETWmi4AiniJeWOt6HAsYgTjYv_fkgzoN/view\" -O model_checkpoint.zip) && unzip model_checkpoint.zip && rm model_checkpoint.zip",
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "vscode",
 	"features": {
